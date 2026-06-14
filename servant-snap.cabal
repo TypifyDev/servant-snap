@@ -60,9 +60,7 @@ library
       , mtl                >= 2.0
       , mmorph             >= 1
       , servant            >= 0.20
-      , snap               >= 1.0
       , snap-core          >= 1.0
-      , snap-server        >= 1.0
       , string-conversions >= 0.3
       , tagged             >= 0.8.5
       , text               >= 1.2
