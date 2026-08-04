@@ -11,7 +11,7 @@ import           Data.Aeson hiding (defaultOptions)
 import           Data.Map.Syntax ((##))
 import           Data.Monoid
 import           Data.Proxy
-import           Data.Text
+import           Data.Text hiding (show)
 import           GHC.Generics
 import qualified Heist.Interpreted as I
 import           Snap.Core hiding (GET)
