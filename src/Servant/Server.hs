@@ -61,6 +61,7 @@ module Servant.Server
 
   ) where
 
+import           Data.Kind                         (Type)
 import           Data.Proxy                        (Proxy(..))
 import           Servant.Server.Internal
 import           Servant.Server.Internal.BasicAuth
@@ -99,7 +100,7 @@ serveApplication
   -> Context context
   -> Server layout context m
   -> Application m
-serveApplication p ctx server = toApplication (runRouter (route p ctx (emptyDelayed (Proxy :: Proxy (m :: * -> *)) ((Route server)))))
+serveApplication p ctx server = toApplication (runRouter (route p ctx (emptyDelayed (Proxy :: Proxy (m :: Type -> Type)) ((Route server)))))
 
 serveSnapWithContext
   :: forall layout context m.(HasServer layout context m, MonadSnap m)

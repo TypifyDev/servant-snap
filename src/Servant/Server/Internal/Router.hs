@@ -4,9 +4,9 @@
 
 module Servant.Server.Internal.Router where
 
+import           Data.Kind                                  (Type)
 import           Data.Map                                   (Map)
 import qualified Data.Map                                   as M
-import           Data.Monoid                                ((<>))
 import           Data.Text                                  (Text)
 import qualified Data.Text                                  as T
 import           Servant.Server.Internal.PathInfo
@@ -14,10 +14,10 @@ import           Servant.Server.Internal.RoutingApplication
 import           Servant.Server.Internal.ServantErr
 import           Snap.Core
 
-type Router (m :: * -> *) env = Router' m env (RoutingApplication m)
+type Router (m :: Type -> Type) env = Router' m env (RoutingApplication m)
 
 -- | Internal representation of a router.
-data Router' (m :: * -> *) env a = --  req app m =
+data Router' (m :: Type -> Type) env a = --  req app m =
     -- WithRequest   (req -> Router req app m)
     --   -- ^ current request is passed to the router
     StaticRouter  (Map Text (Router' m env a)) [env -> a]

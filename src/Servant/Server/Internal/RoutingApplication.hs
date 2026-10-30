@@ -14,8 +14,7 @@
 {-# LANGUAGE UndecidableInstances       #-}
 module Servant.Server.Internal.RoutingApplication where
 
-import           Control.Applicative                (Alternative (..),
-                                                     Applicative (..), (<$>))
+import           Control.Applicative                (Alternative (..))
 import           Control.Monad                      (ap, liftM)
 import           Control.Monad.IO.Class             (MonadIO, liftIO)
 import           Control.Monad.Trans.Class
@@ -23,11 +22,11 @@ import qualified Data.ByteString                    as B
 import qualified Data.ByteString.Builder            as Builder
 import qualified Data.ByteString.Lazy               as BL
 import           Data.CaseInsensitive               (CI)
+import           Data.Kind                          (Type)
 import qualified Data.List                          as L
 import           Data.Proxy                         (Proxy (..))
 import           Network.HTTP.Types                 (Status (..))
 import           Snap.Core
-import           Snap.Internal.Http.Types           (setResponseBody)
 import qualified System.IO.Streams                  as Streams
 
 
@@ -113,11 +112,10 @@ instance Monad m => Functor (DelayedM m) where
   fmap = liftM
 
 instance Monad m => Applicative (DelayedM m) where
-  pure = return
+  pure x = DelayedM (const $ return (Route x))
   (<*>) = ap
 
 instance Monad m => Monad (DelayedM m) where
-  return x = DelayedM (const $ return (Route x))
   DelayedM m >>= f =
     DelayedM $ \ req -> do
       r <- m req
@@ -145,7 +143,7 @@ instance MonadTrans DelayedM where
 
 
 -- | A 'Delayed' without any stored checks.
-emptyDelayed :: Monad m => Proxy (m :: * -> *) -> RouteResult a -> Delayed m env a
+emptyDelayed :: Monad m => Proxy (m :: Type -> Type) -> RouteResult a -> Delayed m env a
 emptyDelayed (Proxy :: Proxy m) result =
   Delayed (const r) r r r r r r (const r) (\ _ _ _ _ _ _ -> result)
   where

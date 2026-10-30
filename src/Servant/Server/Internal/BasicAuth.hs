@@ -16,9 +16,7 @@ import           Data.Functor           ((<$>))
 import           Control.Monad          (guard)
 import qualified Data.ByteString        as BS
 import           Data.ByteString.Base64 (decodeLenient)
-import           Data.CaseInsensitive   (CI(..)) 
-import           Data.Monoid            ((<>))
-import           Data.Typeable          (Typeable)
+import           Data.CaseInsensitive   (CI)
 import           Data.Word8             (isSpace, toLower, _colon)
 import           GHC.Generics
 import           Snap.Core
@@ -41,14 +39,14 @@ data BasicAuthResult usr
   | BadPassword
   | NoSuchUser
   | Authorized usr
-  deriving (Eq, Show, Read, Generic, Typeable, Functor)
+  deriving (Eq, Show, Read, Generic, Functor)
 
 -- | Datatype wrapping a function used to check authentication.
 newtype BasicAuthCheck m usr = BasicAuthCheck
   { unBasicAuthCheck :: BasicAuthData
                      -> m (BasicAuthResult usr)
   }
-  deriving (Generic, Typeable, Functor)
+  deriving (Generic, Functor)
 
 -- | Internal method to make a basic-auth challenge
 mkBAChallengerHdr :: BS.ByteString -> (CI BS.ByteString, BS.ByteString)

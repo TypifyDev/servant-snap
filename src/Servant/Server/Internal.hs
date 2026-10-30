@@ -30,8 +30,6 @@ module Servant.Server.Internal
   ) where
 
 -------------------------------------------------------------------------------
-import           Control.Applicative         ((<$>))
-import           Control.Monad.Trans         (liftIO)
 import           Control.Monad.Trans.Class   (lift)
 import           Control.Monad               (join, when)
 import           Data.Bool                   (bool)
@@ -40,16 +38,15 @@ import qualified Data.ByteString.Builder.Extra as BB
 import qualified Data.ByteString.Char8       as B
 import qualified Data.ByteString.Lazy        as BL
 import           Data.Either                 (partitionEithers)
-import           Data.List                   (foldl')
 import           Data.Maybe                  (fromMaybe, isNothing, mapMaybe,
                                               maybeToList)
+import           Data.Kind                   (Type)
 import           Data.Proxy
 import           Data.String                 (IsString, fromString)
-import           Data.String.Conversions     (cs, (<>))
+import           Data.String.Conversions     (cs)
 import           Data.Tagged                 (Tagged(..), retag)
 import qualified Data.Text                   as T
 import           Data.Text                   (Text)
-import           Data.Typeable               (Typeable)
 import           GHC.Generics
 import           GHC.TypeLits                (KnownNat, KnownSymbol, natVal,
                                               symbolVal)
@@ -97,8 +94,8 @@ import           Servant.Server.Internal.ServantErr
 import           Servant.Server.Internal.SnapShims
 
 
-class HasServer api context (m :: * -> *) where
-  type ServerT api context m :: *
+class HasServer api context (m :: Type -> Type) where
+  type ServerT api context m :: Type
 
   route :: MonadSnap m
         => Proxy api
@@ -613,7 +610,7 @@ instance HasServer api ctx m => HasServer (Description desc :> api) ctx m where
   hoistServerWithContext _ pc nt s = hoistServerWithContext (Proxy :: Proxy api) pc nt s
 
 -- | Singleton type representing a server that serves an empty API.
-data EmptyServer = EmptyServer deriving (Typeable, Eq, Show, Bounded, Enum)
+data EmptyServer = EmptyServer deriving (Eq, Show, Bounded, Enum)
 
 -- | Server for `EmptyAPI`
 emptyServer :: ServerT EmptyAPI context m

@@ -9,7 +9,6 @@
 import           Control.Lens
 import           Data.Aeson hiding (defaultOptions)
 import           Data.Map.Syntax ((##))
-import           Data.Monoid
 import           Data.Proxy
 import           Data.Text hiding (show)
 import           GHC.Generics

@@ -2,9 +2,7 @@
 
 module Servant.Server.Internal.SnapShims where
 
-import           Control.Monad.IO.Class
 import qualified Data.ByteString.Char8 as B
-import           Data.List             (foldl')
 import           Data.IORef
 import           Network.HTTP.Types    (Status(..))
 import           Snap.Core
